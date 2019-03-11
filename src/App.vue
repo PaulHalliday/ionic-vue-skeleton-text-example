@@ -1,17 +1,52 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <ion-app>
+    <ion-header>
+      <ion-toolbar color="danger">
+        <ion-title>S C A R Y T O D O S</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list v-if="todos.length > 0">
+        <ion-item v-for="todo in todos" :key="todo.id">
+          <ion-label>{{todo.title}}</ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-list v-else>
+        <ion-item v-for="i in 20" :key="i">
+          <ion-label>
+            <ion-skeleton-text animated>
+            </ion-skeleton-text>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      todos: []
+    }
+  },
+  created() {
+    setTimeout(
+      () => (
+        this.getDataFromAPI()
+        ), 3000)
+  },
+  methods: {
+    async getDataFromAPI() {
+      try {
+        const req = await fetch('https://jsonplaceholder.typicode.com/todos')
+        this.todos = await req.json()
+      }
+      catch(e) {
+        console.error(`Error: ${e}`)
+      }
+    }
   }
 }
 </script>
@@ -25,4 +60,5 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 </style>
